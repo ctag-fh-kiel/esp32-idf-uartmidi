@@ -191,7 +191,7 @@ int32_t uartmidi_init(void *_callback_midi_message_received)
     if( err != ESP_OK ) {
       ESP_LOGW(UARTMIDI_TAG, "UARTMIDI Configuration not stored so far...");
     } else {
-      int pin = 0;
+      int32_t pin = 0;
       err = nvs_get_i32(nvs_handle, "enable_jumper", &pin);
 
       if( err != ESP_OK ) {
@@ -201,7 +201,7 @@ int32_t uartmidi_init(void *_callback_midi_message_received)
 
         if( uartmidi_enable_jumper > 0 ) {
           // this GPIO switches UART interface between MIDI and Console
-          gpio_pad_select_gpio(uartmidi_enable_jumper);
+          //gpio_pad_select_gpio(uartmidi_enable_jumper);
           gpio_set_direction(uartmidi_enable_jumper, GPIO_MODE_INPUT);
 
           // TODO: enable internal Pull-Up?
@@ -577,7 +577,7 @@ int32_t uartmidi_tick(void)
         if( len >= UARTMIDI_RX_FIFO_SIZE )
           len = UARTMIDI_RX_FIFO_SIZE;
 
-        len = uart_read_bytes(uart->dev, buffer, len, 1 / portTICK_RATE_MS); // we assume no delay since len is matching with available bytes
+        len = uart_read_bytes(uart->dev, buffer, len, 1 / portTICK_PERIOD_MS); // we assume no delay since len is matching with available bytes
 
 #if 1
         uartmidi_receive_stream(i, buffer, len);
